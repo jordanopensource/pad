@@ -528,6 +528,12 @@
       "password": "${USER_PASSWORD:null}",
       "is_admin": false
     },
+     "46ff9b0e-f467-4a94-be98-88aa8ee62087": {
+      "is_admin": true
+    },
+    "091bfa88-5948-489e-a645-a1b8f2132706": {
+      "is_admin": true
+    },
     "guest": {
       "displayname": "${GUEST_DISPLAY_NAME:JOSA Guest}",
       "displaynameChangeable": "${GUEST_DISPLAY_NAME_CHANGEABLE:false}",
@@ -680,6 +686,13 @@
         "redirect_uris": ["${USER_REDIRECT:http://localhost:9001/}"]
       }
     ]
+  },
+  "ep_openid_connect": {
+    "scope": ["openid", "profile", "email", "groups"],
+    "issuer": "${OPENID_ISSUER:https://id.jordanopensource.org/auth/realms/JOSA}",
+    "client_id": "${OPENID_CLIENT_ID:pad}",
+    "client_secret": "${OPENID_CLIENT_SECRET:null}",
+    "base_url": "${OPENID_BASE_URL:https://pad.josa.ngo}"
   },
   "ep_guest": {
     "username": "guest"
