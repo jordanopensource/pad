@@ -13,6 +13,7 @@ steps:
     image: plugins/docker
     settings:
       repo: josaorg/etherpad
+      build_args: [ETHERPAD_PLUGINS=ep_align]
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
