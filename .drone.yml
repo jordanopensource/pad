@@ -1,0 +1,31 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+metadata:
+  namespace: builds
+
+node_selector:
+  doks.digitalocean.com/node-pool: josa-cloud-np
+
+steps:
+  - name: build
+    image: plugins/docker
+    settings:
+      repo: josaorg/etherpad
+      build_args: [ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"]
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+  - name: notify
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_webhook
+      channel: heartbeat
+    depends_on:
+      - build
