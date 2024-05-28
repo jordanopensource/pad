@@ -10,9 +10,12 @@ node_selector:
 
 steps:
   - name: build
+    environment:
+      NODE_ENV: production
     image: plugins/docker
     settings:
       repo: josaorg/pad
+      target: production
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
