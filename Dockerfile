@@ -39,7 +39,7 @@ ARG SETTINGS=./settings.json.docker
 #
 # EXAMPLE:
 #   ETHERPAD_PLUGINS="ep_codepad ep_author_neat"
-ARG ETHERPAD_PLUGINS=
+ARG ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"
 
 # local plugins to install while building the container. By default no plugins are
 # installed.
