@@ -13,8 +13,6 @@ steps:
     image: plugins/docker
     settings:
       repo: josaorg/pad
-      build_args:
-        - ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
