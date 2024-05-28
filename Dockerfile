@@ -119,7 +119,7 @@ COPY --chown=etherpad:etherpad --from=adminBuild /opt/etherpad-lite/admin/dist .
 COPY --chown=etherpad:etherpad --from=adminBuild /opt/etherpad-lite/ui/dist ./src/static/oidc
 
 RUN bin/installDeps.sh && \
-    if [ ! -z "${ETHERPAD_PLUGINS}" ] || [ ! -z "${ETHERPAD_LOCAL_PLUGINS}" ]; then \
+    if [ ! -z "ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect" ] || [ ! -z "${ETHERPAD_LOCAL_PLUGINS}" ]; then \
         pnpm run plugins i ${ETHERPAD_PLUGINS} ${ETHERPAD_LOCAL_PLUGINS:+--path ${ETHERPAD_LOCAL_PLUGINS}}; \
     fi
 
@@ -134,7 +134,7 @@ COPY --chown=etherpad:etherpad --from=adminBuild /opt/etherpad-lite/admin/dist .
 COPY --chown=etherpad:etherpad --from=adminBuild /opt/etherpad-lite/ui/dist ./src/static/oidc
 
 RUN bin/installDeps.sh && rm -rf ~/.npm && rm -rf ~/.local && rm -rf ~/.cache && \
-    if [ ! -z "${ETHERPAD_PLUGINS}" ] || [ ! -z "${ETHERPAD_LOCAL_PLUGINS}" ]; then \
+    if [ ! -z "ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect" ] || [ ! -z "${ETHERPAD_LOCAL_PLUGINS}" ]; then \
         pnpm run plugins i ${ETHERPAD_PLUGINS} ${ETHERPAD_LOCAL_PLUGINS:+--path ${ETHERPAD_LOCAL_PLUGINS}}; \
     fi
 
