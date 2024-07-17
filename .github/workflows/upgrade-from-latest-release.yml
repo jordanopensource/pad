@@ -24,13 +24,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [18, 20, 21]
+        node: [18, 20, 22]
     steps:
       -
         name: Check out latest release
         uses: actions/checkout@v4
         with:
-          ref: master
+          ref: develop #FIXME change to master when doing release
       -
         uses: actions/setup-node@v4
         with:
@@ -78,14 +78,13 @@ jobs:
       -
         name: Install Etherpad plugins
         run: >
-          pnpm run plugins i
+          pnpm run install-plugins
           ep_align
           ep_author_hover
           ep_cursortrace
           ep_font_size
           ep_hash_auth
           ep_headings2
-          ep_image_upload
           ep_markdown
           ep_readonly_guest
           ep_set_title_on_pad

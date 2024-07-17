@@ -1,6 +1,6 @@
 'use strict';
 
-import {linkInstaller} from "ep_etherpad-lite/static/js/pluginfw/installer";
+import {linkInstaller, checkForMigration} from "ep_etherpad-lite/static/js/pluginfw/installer";
 import {persistInstalledPlugins} from "./commonPlugins";
 import fs from "node:fs";
 const settings = require('ep_etherpad-lite/node/utils/Settings');
@@ -12,11 +12,15 @@ if (process.argv.length === 2) {
 
 let args = process.argv.slice(2)
 
-// 3d arg is ls, install or rm
-let action = args[0];
 
-
-
+const possibleActions = [
+  "i",
+  "install",
+  "rm",
+  "remove",
+  "ls",
+  "list"
+]
 
 const install = ()=> {
 
@@ -33,6 +37,9 @@ const install = ()=> {
 
   async function run() {
     for (const plugin of registryPlugins) {
+      if (possibleActions.includes(plugin)){
+        continue
+      }
       console.log(`Installing plugin from registry: ${plugin}`)
       if (plugin.includes('@')) {
         const [name, version] = plugin.split('@');
@@ -49,6 +56,7 @@ const install = ()=> {
   }
 
   (async () => {
+    await checkForMigration();
     await run();
     await persistInstalledPlugins();
   })();
@@ -77,10 +85,12 @@ const remove = (plugins: string[])=>{
   }
 
   (async () => {
+    await checkForMigration();
     await walk();
   })();
 }
 
+let action = args[0];
 
 switch (action) {
   case "install":

@@ -1,3 +1,26 @@
+# 2.1.1
+
+
+### Notable enhancements and fixes
+
+- Fixed failing Docker build when checked out as git submodule. Thanks to @neurolabs
+- Fixed: Fallback to websocket and polling when unknown(old) config is present for socket io
+- Fixed: Next page disabled if zero page by @samyakj023
+- On CTRL+CLICK bring the window back to focus by Helder Sepulveda
+
+# 2.1.0
+
+### Notable enhancements and fixes
+
+- Added PWA support. You can now add your Etherpad instance to your home screen on your mobile device or desktop.
+- Fixed live plugin manager versions clashing. Thanks to @yacchin1205
+- Fixed a bug in the pad panel where pagination was not working correctly when sorting by pad name
+
+### Compatibility changes
+
+- Reintroduced APIKey.txt support. You can now switch between APIKey and OAuth2.0 authentication. This can be toggled with the setting authenticationMethod. The default is OAuth2. If you want to use the APIKey method you can set that to `apikey`.
+
+
 # 2.0.3
 
 ### Notable enhancements and fixes

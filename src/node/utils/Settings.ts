@@ -153,7 +153,7 @@ exports.socketIo = {
      * properly, but increasing the value increases susceptibility to denial of service attacks
      * (malicious clients can exhaust memory).
      */
-    maxHttpBufferSize: 10000,
+    maxHttpBufferSize: 50000,
 };
 
 
@@ -824,6 +824,11 @@ exports.reloadSettings = () => {
         logger.warn('No "skinName" parameter found. Please check out settings.json.template and ' +
             'update your settings.json. Falling back to the default "colibris".');
         exports.skinName = 'colibris';
+    }
+
+    if (!exports.socketTransportProtocols.includes("websocket") || exports.socketTransportProtocols.includes("polling")) {
+        logger.warn("Invalid socketTransportProtocols setting. Please check out settings.json.template and update your settings.json. Falling back to the default ['websocket', 'polling'].");
+        exports.socketTransportProtocols = ['websocket', 'polling'];
     }
 
     // checks if skinName has an acceptable value, otherwise falls back to "colibris"
