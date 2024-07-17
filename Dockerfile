@@ -4,6 +4,8 @@
 #
 # Author: muxator
 
+ARG ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"
+
 FROM node:alpine AS adminbuild
 
 WORKDIR /opt/etherpad-lite
@@ -39,7 +41,7 @@ ARG SETTINGS=./settings.json.docker
 #
 # EXAMPLE:
 #   ETHERPAD_PLUGINS="ep_codepad ep_author_neat"
-ARG ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"
+ARG ETHERPAD_PLUGINS
 
 # local plugins to install while building the container. By default no plugins are
 # installed.
@@ -126,8 +128,8 @@ RUN bin/installDeps.sh && \
 
 FROM build AS production
 
-ENV NODE_ENV=production
-ENV ETHERPAD_PRODUCTION=true
+ARG ETHERPAD_PLUGINS
+ENV NODE_ENV=production ETHERPAD_PRODUCTION=true ETHERPAD_PLUGINS=${ETHERPAD_PLUGINS}
 
 COPY --chown=etherpad:etherpad ./src ./src
 COPY --chown=etherpad:etherpad --from=adminbuild /opt/etherpad-lite/admin/dist ./src/templates/admin
