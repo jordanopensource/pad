@@ -4,7 +4,7 @@
 #
 # Author: muxator
 
-ARG ETHERPAD_PLUGINS="ep_align ep_font_size ep_font_color ep_headings2 ep_guest ep_user_displayname ep_openid_connect"
+ARG ETHERPAD_PLUGINS=${ETHERPAD_PLUGINS}
 
 FROM node:alpine AS adminbuild
 
