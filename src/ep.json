@@ -42,7 +42,8 @@
       "name": "specialpages",
       "hooks": {
         "expressCreateServer": "ep_etherpad-lite/node/hooks/express/specialpages",
-        "expressPreSession": "ep_etherpad-lite/node/hooks/express/specialpages"
+        "expressPreSession": "ep_etherpad-lite/node/hooks/express/specialpages",
+        "socketio": "ep_etherpad-lite/node/hooks/express/specialpages"
       }
     },
     {
@@ -79,6 +80,12 @@
       "name": "errorhandling",
       "hooks": {
         "expressCreateServer": "ep_etherpad-lite/node/hooks/express/errorhandling"
+      }
+    },
+    {
+      "name": "restApi",
+      "hooks": {
+        "expressCreateServer": "ep_etherpad-lite/node/handler/RestAPI"
       }
     },
     {

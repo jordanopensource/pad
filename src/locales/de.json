@@ -85,6 +85,7 @@
 	"pad.settings.fontType": "Schriftart:",
 	"pad.settings.fontType.normal": "Normal",
 	"pad.settings.language": "Sprache:",
+	"pad.delete.confirm": "Möchtest du dieses Pad wirklich löschen?",
 	"pad.settings.about": "Über",
 	"pad.settings.poweredBy": "Betrieben von",
 	"pad.importExport.import_export": "Import/Export",

@@ -4,16 +4,54 @@ import {InstalledPlugin, PluginDef, SearchParams} from "./Plugin.ts";
 import {useDebounce} from "../utils/useDebounce.ts";
 import {Trans, useTranslation} from "react-i18next";
 import {SearchField} from "../components/SearchField.tsx";
-import {Download, Trash} from "lucide-react";
+import {ArrowUpFromDot, Download, Trash} from "lucide-react";
 import {IconButton} from "../components/IconButton.tsx";
+import {determineSorting} from "../utils/sorting.ts";
 
 
 export const HomePage = () => {
     const pluginsSocket = useStore(state=>state.pluginsSocket)
     const [plugins,setPlugins] = useState<PluginDef[]>([])
-    const [installedPlugins, setInstalledPlugins] = useState<InstalledPlugin[]>([])
+  const installedPlugins = useStore(state=>state.installedPlugins)
+  const setInstalledPlugins = useStore(state=>state.setInstalledPlugins)
+  const [searchParams, setSearchParams] = useState<SearchParams>({
+    offset: 0,
+    limit: 99999,
+    sortBy: 'name',
+    sortDir: 'asc',
+    searchTerm: ''
+  })
+
+  const filteredInstallablePlugins = useMemo(()=>{
+    return plugins.sort((a, b)=>{
+      if(searchParams.sortBy === "version"){
+        if(searchParams.sortDir === "asc"){
+          return a.version.localeCompare(b.version)
+        }
+        return b.version.localeCompare(a.version)
+      }
+
+      if(searchParams.sortBy === "last-updated"){
+        if(searchParams.sortDir === "asc"){
+          return a.time.localeCompare(b.time)
+        }
+        return b.time.localeCompare(a.time)
+      }
+
+
+      if (searchParams.sortBy === "name") {
+        if(searchParams.sortDir === "asc"){
+          return a.name.localeCompare(b.name)
+        }
+        return b.name.localeCompare(a.name)
+      }
+      return 0
+    })
+  }, [plugins, searchParams])
+
     const sortedInstalledPlugins = useMemo(()=>{
-        return installedPlugins.sort((a, b)=>{
+        return useStore.getState().installedPlugins.sort((a, b)=>{
+
             if(a.name < b.name){
                 return -1
             }
@@ -23,14 +61,8 @@ export const HomePage = () => {
             return 0
         })
 
-    } ,[installedPlugins])
-    const [searchParams, setSearchParams] = useState<SearchParams>({
-        offset: 0,
-        limit: 99999,
-        sortBy: 'name',
-        sortDir: 'asc',
-        searchTerm: ''
-    })
+    } ,[installedPlugins, searchParams])
+
     const [searchTerm, setSearchTerm] = useState<string>('')
     const {t} = useTranslation()
 
@@ -47,17 +79,16 @@ export const HomePage = () => {
         })
 
         pluginsSocket.on('results:updatable', (data) => {
-            data.updatable.forEach((pluginName: string) => {
-                setInstalledPlugins(installedPlugins.map(plugin => {
-                    if (plugin.name === pluginName) {
-                        return {
-                            ...plugin,
-                            updatable: true
-                        }
-                    }
-                    return plugin
-                }))
-            })
+          const newInstalledPlugins = useStore.getState().installedPlugins.map(plugin => {
+            if (data.updatable.includes(plugin.name)) {
+              return {
+                ...plugin,
+                updatable: true
+              }
+            }
+            return plugin
+          })
+         setInstalledPlugins(newInstalledPlugins)
         })
 
         pluginsSocket.on('finished:install', () => {
@@ -128,6 +159,7 @@ export const HomePage = () => {
         })
     }, 500, [searchTerm])
 
+
     return <div>
         <h1><Trans i18nKey="admin_plugins"/></h1>
 
@@ -149,7 +181,7 @@ export const HomePage = () => {
                     <td>
                     {
                         plugin.updatable ?
-                            <button onClick={() => installPlugin(plugin.name)}>Update</button>
+                            <IconButton onClick={() => installPlugin(plugin.name)} icon={<ArrowUpFromDot/>} title="Update"></IconButton>
                             : <IconButton disabled={plugin.name == "ep_etherpad-lite"} icon={<Trash/>} title={<Trans i18nKey="admin_plugins.installed_uninstall.value"/>} onClick={() => uninstallPlugin(plugin.name)}/>
                     }
                     </td>
@@ -162,19 +194,39 @@ export const HomePage = () => {
         <h2><Trans i18nKey="admin_plugins.available"/></h2>
         <SearchField onChange={v=>{setSearchTerm(v.target.value)}} placeholder={t('admin_plugins.available_search.placeholder')} value={searchTerm}/>
 
+      <div className="table-container">
         <table id="available-plugins">
             <thead>
             <tr>
-                <th><Trans i18nKey="admin_plugins.name"/></th>
+                <th className={determineSorting(searchParams.sortBy, searchParams.sortDir == "asc", 'name')} onClick={()=>{
+                  setSearchParams({
+                    ...searchParams,
+                    sortBy: 'name',
+                    sortDir: searchParams.sortDir === "asc"? "desc": "asc"
+                  })
+                }}>
+                  <Trans i18nKey="admin_plugins.name" /></th>
                 <th style={{width: '30%'}}><Trans i18nKey="admin_plugins.description"/></th>
-                <th><Trans i18nKey="admin_plugins.version"/></th>
-                <th><Trans i18nKey="admin_plugins.last-update"/></th>
+                <th className={determineSorting(searchParams.sortBy, searchParams.sortDir == "asc", 'version')} onClick={()=>{
+                  setSearchParams({
+                    ...searchParams,
+                    sortBy: 'version',
+                    sortDir: searchParams.sortDir === "asc"? "desc": "asc"
+                  })
+                }}><Trans i18nKey="admin_plugins.version"/></th>
+                <th className={determineSorting(searchParams.sortBy, searchParams.sortDir == "asc", 'last-updated')} onClick={()=>{
+                  setSearchParams({
+                    ...searchParams,
+                    sortBy: 'last-updated',
+                    sortDir: searchParams.sortDir === "asc"? "desc": "asc"
+                  })
+                }}><Trans i18nKey="admin_plugins.last-update"/></th>
                 <th><Trans i18nKey="ep_admin_pads:ep_adminpads2_action"/></th>
             </tr>
             </thead>
             <tbody style={{overflow: 'auto'}}>
-            {(plugins.length > 0) ?
-                    plugins.map((plugin) => {
+            {(filteredInstallablePlugins.length > 0) ?
+              filteredInstallablePlugins.map((plugin) => {
                         return <tr key={plugin.name}>
                             <td><a rel="noopener noreferrer" href={`https://npmjs.com/${plugin.name}`} target="_blank">{plugin.name}</a></td>
                             <td>{plugin.description}</td>
@@ -190,5 +242,6 @@ export const HomePage = () => {
             }
             </tbody>
         </table>
+      </div>
     </div>
 }

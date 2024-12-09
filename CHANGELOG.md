@@ -1,3 +1,47 @@
+# 2.2.6
+
+### Notable enhancements and fixes
+
+- Added option to delete a pad by the creator. This option can be found in the settings menu. When you click on it you get a confirm dialog and after that you have the chance to completely erase the pad.
+
+
+# 2.2.5
+
+### Notable enhancements and fixes
+
+- Fixed timeslider not scrolling when the revision count is a multiple of 100
+- Added new Restful API for version 2 of Etherpad. It is available at /api-docs
+
+
+# 2.2.4
+
+### Notable enhancements and fixes
+
+- Switched to new SQLite backend
+- Fixed rusty-store-kv module not found
+
+
+# 2.2.3
+
+### Notable enhancements and fixes
+
+- Introduced a new in process database `rustydb` that represents a fast key value store written in Rust.
+- Readded window._ as a shortcut for getting text
+- Added support for migrating any ueberdb database to another. You can now switch as you please. See here: https://docs.etherpad.org/cli.html
+- Further Typescript movements
+- A lot of security issues fixed and reviewed in this release. Please update.
+
+
+# 2.2.2
+
+### Notable enhancements and fixes
+
+- Removal of Etherpad require kernel: We finally managed to include esbuild to bundle our frontend code together. So no matter how many plugins your server has it is always one JavaScript file. This boosts performance dramatically.
+- Added log layoutType: This lets you print the log in either colored or basic (black and white text)
+- Introduced esbuild for bundling CSS files
+- Cache all files to be bundled in memory for faster load speed
+
+
 # 2.1.1
 
 

@@ -2,12 +2,11 @@
 
 import {MapArrayType} from "../../node/types/MapType";
 
-const AttributePool = require('../../static/js/AttributePool');
-const apiHandler = require('../../node/handler/APIHandler');
+import AttributePool from '../../static/js/AttributePool';
 const assert = require('assert').strict;
 const io = require('socket.io-client');
 const log4js = require('log4js');
-const {padutils} = require('../../static/js/pad_utils');
+import padutils from '../../static/js/pad_utils';
 const process = require('process');
 const server = require('../../node/server');
 const setCookieParser = require('set-cookie-parser');
@@ -250,6 +249,19 @@ export const sendUserChanges = async (socket:any, data:any) => await sendMessage
     ...data,
   },
 });
+
+
+/*
+  * Convenience function to send a delete pad request.
+ */
+export const sendPadDelete = async (socket:any, data:any) => await sendMessage(socket, {
+  type: 'PAD_DELETE',
+  component: 'pad',
+  data: {
+    padId: data.padId
+  },
+});
+
 
 /**
  * Convenience function that waits for an ACCEPT_COMMIT message. Asserts that the new revision

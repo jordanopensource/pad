@@ -9,6 +9,7 @@ services:
     build:
       context: .
       args:
+        # Attention: installed plugins in the node_modules folder get overwritten during volume mount in dev
         ETHERPAD_PLUGINS:
       # change from development to production if needed
       target: development
@@ -57,7 +58,7 @@ services:
     # ports:
     #   - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/pgdata
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
